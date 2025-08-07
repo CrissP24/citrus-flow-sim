@@ -2,41 +2,62 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* CitriFlow - Sistema de Riego Automatizado de Cítricos */
+/* Diseño natural con colores de agricultura, agua y tierra */
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    /* Colores base - tonos naturales */
+    --background: 45 20% 97%;
+    --foreground: 25 25% 15%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    /* Tarjetas con toque orgánico */
+    --card: 50 30% 98%;
+    --card-foreground: 25 25% 15%;
 
-    --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover: 50 30% 98%;
+    --popover-foreground: 25 25% 15%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Verde oliva principal - agricultura */
+    --primary: 85 35% 35%;
+    --primary-foreground: 50 30% 98%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Azul agua - sistemas de riego */
+    --secondary: 200 70% 85%;
+    --secondary-foreground: 200 25% 25%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Tonos tierra suave */
+    --muted: 40 15% 92%;
+    --muted-foreground: 40 15% 45%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Acento verde natural */
+    --accent: 120 30% 75%;
+    --accent-foreground: 120 35% 25%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Alerta para problemas de riego */
+    --destructive: 15 85% 55%;
+    --destructive-foreground: 50 30% 98%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    /* Bordes sutiles */
+    --border: 40 20% 88%;
+    --input: 40 20% 88%;
+    --ring: 85 35% 35%;
 
-    --radius: 0.5rem;
+    /* Gradientes naturales */
+    --gradient-nature: linear-gradient(135deg, hsl(85 35% 35%), hsl(120 30% 45%));
+    --gradient-water: linear-gradient(135deg, hsl(200 70% 60%), hsl(220 60% 70%));
+    --gradient-earth: linear-gradient(135deg, hsl(25 40% 60%), hsl(40 35% 55%));
+    --gradient-hero: linear-gradient(135deg, hsl(85 35% 35%) 0%, hsl(120 30% 45%) 50%, hsl(200 60% 60%) 100%);
+    
+    /* Sombras orgánicas */
+    --shadow-natural: 0 4px 20px -4px hsl(85 35% 35% / 0.15);
+    --shadow-water: 0 8px 30px -8px hsl(200 70% 60% / 0.2);
+    --shadow-glow: 0 0 40px hsl(120 30% 45% / 0.3);
+
+    /* Transiciones suaves */
+    --transition-organic: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    --radius: 0.75rem;
 
     --sidebar-background: 0 0% 98%;
 

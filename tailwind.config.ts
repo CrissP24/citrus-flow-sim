@@ -68,6 +68,20 @@ export default {
 				md: 'calc(var(--radius) - 2px)',
 				sm: 'calc(var(--radius) - 4px)'
 			},
+			backgroundImage: {
+				'gradient-nature': 'var(--gradient-nature)',
+				'gradient-water': 'var(--gradient-water)',
+				'gradient-earth': 'var(--gradient-earth)',
+				'gradient-hero': 'var(--gradient-hero)',
+			},
+			boxShadow: {
+				'natural': 'var(--shadow-natural)',
+				'water': 'var(--shadow-water)',
+				'glow': 'var(--shadow-glow)',
+			},
+			transitionTimingFunction: {
+				'organic': 'var(--transition-organic)',
+			},
 			keyframes: {
 				'accordion-down': {
 					from: {
