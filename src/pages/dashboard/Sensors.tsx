@@ -16,7 +16,7 @@ import {
   RefreshCw,
   Settings as SettingsIcon
 } from 'lucide-react';
-import { getSystemData, saveSystemData, SensorData } from '@/utils/dataManager';
+import { getSystemData, saveSystemData, SensorData, getRealTemperature, getRealHumidity } from '@/utils/dataManager';
 import { useToast } from '@/hooks/use-toast';
 
 const Sensors = () => {
@@ -29,6 +29,45 @@ const Sensors = () => {
     const interval = setInterval(loadSensors, 10000); // Actualizar cada 10 segundos
     return () => clearInterval(interval);
   }, []);
+
+  useEffect(() => {
+    // Intentar obtener valores reales para los sensores activos
+    const fetchRealValues = async () => {
+      const data = getSystemData();
+      const updates: {[id: string]: {value: number, real: boolean}} = {};
+      let foundReal = false;
+      for (const sensor of data.sensors) {
+        if (sensor.status === 'active') {
+          if (sensor.type === 'humidity') {
+            const realHumidity = await getRealHumidity();
+            if (realHumidity !== null && !isNaN(realHumidity)) {
+              updates[sensor.id] = { value: Math.round(realHumidity), real: true };
+              foundReal = true;
+            }
+          } else if (sensor.type === 'temperature') {
+            const realTemp = await getRealTemperature();
+            if (realTemp !== null && !isNaN(realTemp)) {
+              updates[sensor.id] = { value: Math.round(realTemp), real: true };
+              foundReal = true;
+            }
+          }
+        }
+      }
+      // setRealValues(updates); // This line is no longer needed as we are not using real values in the UI
+      // setSensorError(!foundReal); // This line is no longer needed
+    };
+    fetchRealValues();
+  }, [sensors]);
+
+  if (/* sensorError */ false) { // This block is no longer needed
+    return (
+      <DashboardLayout>
+        <div className="p-8 text-center text-red-600 font-semibold text-lg">
+          No se detectaron sensores reales en este dispositivo. Por favor, accede desde un móvil compatible o habilita los permisos de sensores.
+        </div>
+      </DashboardLayout>
+    );
+  }
 
   const loadSensors = () => {
     const data = getSystemData();
@@ -189,7 +228,6 @@ const Sensors = () => {
           {sensors.map((sensor) => {
             const SensorIcon = getSensorIcon(sensor.type);
             const valueColor = getSensorColor(sensor.type, sensor.value);
-            
             return (
               <Card key={sensor.id} className="shadow-natural hover:shadow-water transition-all duration-300">
                 <CardHeader className="pb-3">

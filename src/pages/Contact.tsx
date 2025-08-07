@@ -252,24 +252,7 @@ const Contact = () => {
                   </Card>
                 </div>
 
-                {/* Información adicional */}
-                <Card className="bg-gradient-nature text-primary-foreground shadow-water">
-                  <CardContent className="p-8">
-                    <h3 className="text-2xl font-bold mb-4">
-                      ¿Necesitas una Demo?
-                    </h3>
-                    <p className="text-primary-foreground/90 mb-6">
-                      Solicita una demostración personalizada de CitriFlow y descubre 
-                      cómo nuestro sistema puede transformar tu cultivo de cítricos.
-                    </p>
-                    <Button 
-                      variant="outline" 
-                      className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10"
-                    >
-                      Solicitar Demo Gratuita
-                    </Button>
-                  </CardContent>
-                </Card>
+               
               </div>
             </div>
           </div>

@@ -131,31 +131,47 @@ export const saveSystemData = (data: SystemData): void => {
   }
 };
 
-// Simulación de actualización de sensores
+// --- Simulación basada en clima real de Jipijapa ---
+// Valores aproximados para Jipijapa, Ecuador
+// Temperatura promedio: 22°C (noche) a 32°C (tarde)
+// Humedad promedio: 60% (tarde) a 85% (madrugada)
+
+function getJipijapaWeatherSim() {
+  const now = new Date();
+  const hour = now.getHours();
+  // Temperatura: sube desde 22°C (5am) hasta 32°C (15pm), luego baja
+  let temp = 22 + 10 * Math.sin(Math.PI * (hour - 5) / 14); // 5am-19pm
+  // Humedad: baja desde 85% (5am) hasta 60% (15pm), luego sube
+  let humidity = 85 - 25 * Math.sin(Math.PI * (hour - 5) / 14);
+  // Añadir pequeñas variaciones aleatorias
+  temp += (Math.random() - 0.5) * 2; // +/-1°C
+  humidity += (Math.random() - 0.5) * 4; // +/-2%
+  return {
+    temperature: Math.round(temp),
+    humidity: Math.round(humidity)
+  };
+}
+
+// Modificar updateSensorValues para usar clima de Jipijapa
 export const updateSensorValues = (): void => {
   const data = getSystemData();
-  
+  const jipijapa = getJipijapaWeatherSim();
   data.sensors.forEach(sensor => {
     if (sensor.status === 'active') {
       if (sensor.type === 'humidity') {
-        // Humedad varía entre 20-60%
-        sensor.value = Math.round(20 + Math.random() * 40);
+        sensor.value = jipijapa.humidity;
       } else if (sensor.type === 'temperature') {
-        // Temperatura varía entre 18-32°C
-        sensor.value = Math.round(18 + Math.random() * 14);
+        sensor.value = jipijapa.temperature;
       }
       sensor.lastUpdated = new Date().toISOString();
     }
   });
-
   // Auto-riego si humedad promedio está por debajo del umbral
   const humiditySensors = data.sensors.filter(s => s.type === 'humidity' && s.status === 'active');
   const avgHumidity = humiditySensors.reduce((sum, s) => sum + s.value, 0) / humiditySensors.length;
-  
   if (data.config.autoIrrigation && avgHumidity < data.config.humidityThreshold && !data.config.pumpActive) {
     activatePump('automatic', data);
   }
-
   data.config.lastUpdate = new Date().toISOString();
   saveSystemData(data);
 };
@@ -228,4 +244,62 @@ export const initializeSystem = (): void => {
   setInterval(updateSensorValues, 30000);
   
   console.log('CitriFlow system initialized');
+};
+
+// Obtener temperatura real del dispositivo (si está disponible)
+export const getRealTemperature = (): Promise<number | null> => {
+  return new Promise((resolve) => {
+    // API de sensores web: AmbientTemperatureSensor (no soportado en la mayoría de navegadores)
+    // Fallback: usar DeviceMotionEvent/DeviceOrientationEvent (no da temperatura, solo ejemplo)
+    // Por ahora, solo intentamos con AmbientTemperatureSensor si existe
+    if ('AmbientTemperatureSensor' in window) {
+      try {
+        // @ts-ignore
+        const sensor = new window.AmbientTemperatureSensor();
+        sensor.addEventListener('reading', () => {
+          resolve(sensor.temperature);
+          sensor.stop();
+        });
+        sensor.addEventListener('error', () => {
+          resolve(null);
+        });
+        sensor.start();
+      } catch {
+        resolve(null);
+      }
+    } else if ('ondevicetemperature' in window) {
+      // Algunos navegadores antiguos
+      // @ts-ignore
+      window.addEventListener('devicetemperature', (event: any) => {
+        resolve(event.temperature || null);
+      });
+    } else {
+      resolve(null);
+    }
+  });
+};
+
+// Obtener humedad real del dispositivo (si está disponible)
+export const getRealHumidity = (): Promise<number | null> => {
+  return new Promise((resolve) => {
+    // API de sensores web: RelativeHumiditySensor (no soportado en la mayoría de navegadores)
+    if ('RelativeHumiditySensor' in window) {
+      try {
+        // @ts-ignore
+        const sensor = new window.RelativeHumiditySensor();
+        sensor.addEventListener('reading', () => {
+          resolve(sensor.humidity);
+          sensor.stop();
+        });
+        sensor.addEventListener('error', () => {
+          resolve(null);
+        });
+        sensor.start();
+      } catch {
+        resolve(null);
+      }
+    } else {
+      resolve(null);
+    }
+  });
 };

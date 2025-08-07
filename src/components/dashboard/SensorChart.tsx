@@ -12,7 +12,7 @@ import {
   AreaChart,
   Area
 } from 'recharts';
-import { getSystemData } from '@/utils/dataManager';
+import { getSystemData, getRealTemperature, getRealHumidity } from '@/utils/dataManager';
 import { Droplets, Thermometer } from 'lucide-react';
 
 const SensorChart = () => {
@@ -25,26 +25,21 @@ const SensorChart = () => {
   useEffect(() => {
     const updateChartData = () => {
       const data = getSystemData();
-      
       // Obtener valores actuales
       const humiditySensors = data.sensors.filter(s => s.type === 'humidity' && s.status === 'active');
       const tempSensors = data.sensors.filter(s => s.type === 'temperature' && s.status === 'active');
-      
       const avgHumidity = humiditySensors.reduce((sum, s) => sum + s.value, 0) / humiditySensors.length;
       const avgTemp = tempSensors.reduce((sum, s) => sum + s.value, 0) / tempSensors.length;
-      
       setCurrentData({
         humidity: Math.round(avgHumidity),
         temperature: Math.round(avgTemp)
       });
-
       // Actualizar datos del gráfico
       const now = new Date();
-      const timeLabel = now.toLocaleTimeString('es-ES', { 
-        hour: '2-digit', 
-        minute: '2-digit' 
+      const timeLabel = now.toLocaleTimeString('es-ES', {
+        hour: '2-digit',
+        minute: '2-digit'
       });
-
       setChartData(prev => {
         const newData = [...prev, {
           time: timeLabel,
@@ -52,18 +47,12 @@ const SensorChart = () => {
           temperature: Math.round(avgTemp),
           threshold: data.config.humidityThreshold
         }];
-        
         // Mantener solo los últimos 20 puntos
         return newData.slice(-20);
       });
     };
-
-    // Inicializar con datos
     updateChartData();
-    
-    // Actualizar cada 30 segundos
     const interval = setInterval(updateChartData, 30000);
-
     return () => clearInterval(interval);
   }, []);
 

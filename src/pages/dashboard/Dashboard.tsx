@@ -86,42 +86,33 @@ const Dashboard = () => {
         {/* Métricas principales */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           <MetricCard
-            title="Humedad Promedio"
+            type="humidity"
             value={systemStats.avgHumidity}
-            unit="%"
-            subtitle="Nivel actual del suelo"
-            icon={Droplets}
-            color={humidityStatus.color as any}
-            trend={humidityStatus.trend}
+            label="Humedad Promedio"
+            description="Nivel actual del suelo"
           />
-          
           <MetricCard
-            title="Temperatura"
+            type="temperature"
             value={systemStats.avgTemperature}
-            unit="°C"
-            subtitle="Ambiente actual"
-            icon={Thermometer}
-            color={temperatureStatus.color as any}
-            trend={temperatureStatus.trend}
+            label="Temperatura"
+            description="Ambiente actual"
           />
-          
           <MetricCard
-            title="Sensores Activos"
+            type="sensors"
             value={systemStats.activeSensors}
-            unit=""
-            subtitle={`de ${sensorData.length} total`}
-            icon={Activity}
-            color="accent"
+            label="Sensores Activos"
+            description={`de ${sensorData.length} total`}
           />
-          
-          <MetricCard
-            title="Estado del Sistema"
-            value={systemStats.pumpActive ? 'ACTIVO' : systemStats.autoMode ? 'AUTOMÁTICO' : 'MANUAL'}
-            unit=""
-            subtitle={systemStats.pumpActive ? 'Regando ahora' : 'En espera'}
-            icon={Zap}
-            color={systemStats.pumpActive ? 'primary' : 'default'}
-          />
+          <div className="rounded-xl shadow-md p-6 flex flex-col items-start justify-center min-w-[220px] bg-gradient-to-br from-green-100 to-green-300">
+            <div className="flex items-center gap-3 mb-2">
+              <span className="inline-flex items-center justify-center rounded-full bg-green-500 p-2">
+                <span className="h-6 w-6 inline-block bg-green-700 rounded-full"></span>
+              </span>
+              <span className="text-lg font-bold text-green-900">Estado del Sistema</span>
+            </div>
+            <div className="text-2xl font-extrabold text-green-800 mb-1">{systemStats.pumpActive ? 'ACTIVO' : systemStats.autoMode ? 'AUTOMÁTICO' : 'MANUAL'}</div>
+            <div className="text-sm text-green-900/80">{systemStats.pumpActive ? 'Regando ahora' : 'En espera'}</div>
+          </div>
         </div>
 
         {/* Alertas importantes */}
