@@ -195,9 +195,9 @@ const Contact = () => {
                       <div>
                         <h3 className="font-bold text-foreground mb-2">Ubicación</h3>
                         <p className="text-muted-foreground">
-                          Zona Agrícola de Valencia<br />
-                          Comunidad Valenciana, España<br />
-                          CP: 46000
+                         UNIVERSIDAD ESTATAL DEL SUR DE MANABÌ<br />
+             
+                       
                         </p>
                       </div>
                     </CardContent>

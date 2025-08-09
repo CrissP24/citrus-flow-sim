@@ -2,10 +2,12 @@ import { Link, useLocation } from 'react-router-dom';
 import { Button } from '@/components/ui/button';
 import { Droplets, Menu, X } from 'lucide-react';
 import { useState } from 'react';
+import logoImg from '@/assets/tics.png';
 
 const Navbar = () => {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [useFallbackIcon, setUseFallbackIcon] = useState(false);
 
   const navItems = [
     { href: '/', label: 'Inicio' },
@@ -21,11 +23,22 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center space-x-2 group">
-            <div className="bg-gradient-nature p-2 rounded-lg shadow-natural group-hover:shadow-glow transition-all duration-300">
-              <Droplets className="h-6 w-6 text-primary-foreground" />
+            <div className="rounded-lg shadow-natural group-hover:shadow-glow transition-all duration-300 overflow-hidden h-9 w-9 bg-white flex items-center justify-center">
+              {!useFallbackIcon ? (
+                <img
+                  src={logoImg}
+                  alt="SISTEMA DE RIEGO CITRIFLOW"
+                  className="h-9 w-9 object-contain"
+                  onError={() => setUseFallbackIcon(true)}
+                />
+              ) : (
+                <div className="bg-gradient-nature p-2 rounded-lg">
+                  <Droplets className="h-6 w-6 text-primary-foreground" />
+                </div>
+              )}
             </div>
             <span className="text-xl font-bold bg-gradient-nature bg-clip-text text-transparent">
-              CitriFlow
+              SISTEMA DE RIEGO CITRIFLOW
             </span>
           </Link>
 

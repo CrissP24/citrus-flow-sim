@@ -81,7 +81,7 @@ const Footer = () => {
               </div>
               <div className="flex items-center space-x-2">
                 <Phone className="h-4 w-4" />
-                <span>+34 XXX XXX XXX</span>
+                <span>+593</span>
               </div>
               <div className="flex items-center space-x-2">
                 <Mail className="h-4 w-4" />
@@ -91,9 +91,15 @@ const Footer = () => {
           </div>
         </div>
 
-        <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center">
+        <div className="border-t border-primary-foreground/20 mt-8 pt-8 text-center space-y-2">
           <p className="text-primary-foreground/60 text-sm">
-            © 2024 CitriFlow. Todos los derechos reservados. Sistema de riego inteligente para cítricos.
+            © 2025 CitriFlow. Todos los derechos reservados. Sistema de riego inteligente para cítricos.
+          </p>
+          <p className="text-primary-foreground/80 text-sm font-semibold">
+            Alcivar Giler Sindy Nicolle
+          </p>
+          <p className="text-primary-foreground/70 text-xs">
+            Estudiante de la carrera Tecnologías de la Información de la UNESUM
           </p>
         </div>
       </div>
