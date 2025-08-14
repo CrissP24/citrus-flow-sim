@@ -152,20 +152,28 @@ function getJipijapaWeatherSim() {
   };
 }
 
-// Modificar updateSensorValues para usar clima de Jipijapa
-export const updateSensorValues = (): void => {
+// Función mejorada con sensores reales del dispositivo
+export const updateSensorValues = async (): Promise<void> => {
   const data = getSystemData();
   const jipijapa = getJipijapaWeatherSim();
+  
+  // Intentar obtener datos reales del dispositivo
+  const realTemp = await getRealTemperature();
+  const realHumidity = await getRealHumidity();
+  
   data.sensors.forEach(sensor => {
     if (sensor.status === 'active') {
       if (sensor.type === 'humidity') {
-        sensor.value = jipijapa.humidity;
+        // Usar humedad real si está disponible, sino simulada
+        sensor.value = realHumidity !== null ? Math.round(realHumidity) : jipijapa.humidity;
       } else if (sensor.type === 'temperature') {
-        sensor.value = jipijapa.temperature;
+        // Usar temperatura real si está disponible, sino simulada
+        sensor.value = realTemp !== null ? Math.round(realTemp) : jipijapa.temperature;
       }
       sensor.lastUpdated = new Date().toISOString();
     }
   });
+  
   // Auto-riego si humedad promedio está por debajo del umbral
   const humiditySensors = data.sensors.filter(s => s.type === 'humidity' && s.status === 'active');
   const avgHumidity = humiditySensors.reduce((sum, s) => sum + s.value, 0) / humiditySensors.length;
@@ -236,14 +244,44 @@ export const authenticateUser = (username: string, password: string): boolean =>
   return !!user;
 };
 
-// Inicializar sistema
+// Inicializar sistema con actualizaciones más frecuentes
 export const initializeSystem = (): void => {
   const data = getSystemData();
   
-  // Actualizar sensores cada 30 segundos
-  setInterval(updateSensorValues, 30000);
+  // Actualizar sensores cada 10 segundos para más fluidez
+  setInterval(async () => {
+    await updateSensorValues();
+  }, 10000);
   
-  console.log('CitriFlow system initialized');
+  // Simulación adicional cada 3 segundos para variaciones menores
+  setInterval(() => {
+    simulateMinorSensorVariations();
+  }, 3000);
+  
+  console.log('CitriFlow system initialized with enhanced real-time monitoring');
+};
+
+// Nueva función para pequeñas variaciones realistas
+export const simulateMinorSensorVariations = (): void => {
+  const data = getSystemData();
+  
+  data.sensors.forEach(sensor => {
+    if (sensor.status === 'active') {
+      // Pequeñas variaciones aleatorias ±1
+      const variation = (Math.random() - 0.5) * 2;
+      
+      if (sensor.type === 'humidity') {
+        sensor.value = Math.max(0, Math.min(100, sensor.value + variation));
+      } else if (sensor.type === 'temperature') {
+        sensor.value = Math.max(-10, Math.min(50, sensor.value + variation));
+      }
+      
+      sensor.value = Math.round(sensor.value);
+      sensor.lastUpdated = new Date().toISOString();
+    }
+  });
+  
+  saveSystemData(data);
 };
 
 // Obtener temperatura real del dispositivo (si está disponible)

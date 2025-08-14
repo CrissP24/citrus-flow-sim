@@ -51,7 +51,7 @@ const Dashboard = () => {
     };
 
     loadData();
-    const interval = setInterval(loadData, 5000); // Actualizar cada 5 segundos
+    const interval = setInterval(loadData, 2000); // Actualizar cada 2 segundos para mayor fluidez
 
     return () => clearInterval(interval);
   }, []);
